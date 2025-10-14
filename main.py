@@ -1,31 +1,16 @@
-from langchain_openai import ChatOpenAI
-from langchain.schema import HumanMessage
-from langchain.prompts import PromptTemplate
-from dotenv import load_dotenv
-import os
+import langchain_helper as lch
+import streamlit as st
 
-load_dotenv()
+st.title("Pet's name Generator")
 
-def generate_pet(animal_type):
+user_animal_name = st.sidebar.selectbox(
+    "Select an animal:",
+    ["Cat", "Dog", "Elephant", "Lion", "Tiger", "Bear", "Wolf", "Giraffe", "Zebra", "Monkey"]
+)
 
-    prompt = PromptTemplate(
-        input_variables = ['animal_type'],
-        template = 'i have a {animal_type} pet and i want a cool name for it.' \
-        'suggest me five for my pet '
-    )
+if user_animal_name :
+    pet_color = st.sidebar.text_area(label="Input your pet's color", max_chars=15)
 
-    llm = ChatOpenAI(
-    model='gpt-4o',  # or your correct model name
-    temperature=0.7,
-    openai_api_key=os.getenv('OPENAI_API_KEY'),
-    openai_api_base=os.getenv('OPENAI_API_BASE'), # if using a custom base
-    max_tokens=500
-    )
-
-    formatted_prompt = prompt.format(animal_type=animal_type)
-
-    response = llm.invoke([HumanMessage(content=formatted_prompt)])
-
-    return response.content
-
-print(generate_pet('dog'))
+if pet_color:
+    response = lch.generate_pet(user_animal_name, pet_color)
+    st.write(response['text'])
