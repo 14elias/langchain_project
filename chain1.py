@@ -31,6 +31,7 @@ format_template= RunnableLambda(lambda x : prompt_template.format_prompt(**x) )
 
 #chain = RunnableSequence(first=format_template, middle=[invoke_model], last=parse_output)
 chain = format_template | llm | StrOutputParser()
+
 print(chain.invoke({"topic":"teacher","joke_count":2}))
 #result = llm.invoke(prompt_template.format_prompt(topic='teacher', joke_count = 2))
 #print(result.content)
